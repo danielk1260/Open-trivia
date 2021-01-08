@@ -1,4 +1,5 @@
 function printData(data) {
+  console.log(data);
   //obntener donde quiero poner los datos o los elementos 
   const containerData = document.getElementById('questions-container');
   //generar los datos /elementos
@@ -40,6 +41,8 @@ function getQuestions() {
   const tipeOptions = document.getElementById('tipeOptions').value;
 
   const url = `https://opentdb.com/api.php?amount=${questionOptions}${categoryOptions}${difficultyOptions}${tipeOptions}`;
+  url.trim();
+  console.log(url);
   fetch(url)
     .then((response) => response.json())
     .then((data) => printData(data.results));
