@@ -6,7 +6,7 @@ function getQuest() {
   const tipo = document.getElementById('tipo').value;
 
   let url = `https://opentdb.com/api.php?amount=${cantidad}${categorias}&difficulty=${dificultad}&type=${tipo}`;
-console.log(url)
+
   fetch(url)
     .then((response) => response.json())
     .then((data) => renderQuest(data.results));
@@ -16,10 +16,9 @@ function renderQuest(data) {
 
   let html = '';
   let id = 0;
-  console.log(data);
 
   data.forEach((row, index) => {
-    console.log(index);
+  
     id += 1;
     row.id = id;
 
