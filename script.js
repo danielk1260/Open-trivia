@@ -1,51 +1,149 @@
-function printData(data) {
-  console.log(data);
-  //obntener donde quiero poner los datos o los elementos 
-  const containerData = document.getElementById('questions-container');
-  //generar los datos /elementos
+function getQuest() {
+
+  const cantidad = document.getElementById('cantidad').value;
+  const categorias = document.getElementById('categorias').value;
+  const dificultad = document.getElementById('dificultad').value;
+  const tipo = document.getElementById('tipo').value;
+
+  let url = `https://opentdb.com/api.php?amount=${cantidad}${categorias}&difficulty=${dificultad}&type=${tipo}`;
+console.log(url)
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => renderQuest(data.results));
+}
+
+function renderQuest(data) {
+
   let html = '';
-  data.forEach(element => {
-    html += `<div class="column">
-    <div class="ui ${colorDifficulty(element.difficulty)} card">
-    <div class="content">
-    <div class="header">${element.category}</div>
-    <div class="meta">
-    <span class="right floated time">
-    <a id="difficulty" class="ui ${colorDifficulty(element.difficulty)} right ribbon label">${capitalize(element.difficulty)}</a>
-    </span>
-    <span class="category">Type: ${capitalize(element.type)}</span>
+  let id = 0;
+  console.log(data);
+
+  data.forEach((row, index) => {
+    console.log(index);
+    id += 1;
+    row.id = id;
+
+    let answers = [];
+    row.incorrect_answers.forEach(r => {
+      answers.push(r);
+    });
+    answers.push(row.correct_answer);
+    answers.sort(function () {
+      return 0.5 - Math.random();
+    });
+
+    html += `
+    <div class="ui tall stacked raised segment" id="segmentrespuestas${id}">
+      <h4 class="ui dividing header">
+      <div class="ui icon" data-tooltip="Este color tiene relacion con la dificultad!">
+        <i class="tasks ${colorDifficulty(row.difficulty)} icon"></i>
+        </div>
+        <div class="content">
+          ${row.category}
+          <div class="sub header">${capitalize(row.difficulty)} | ${capitalize(row.type)} | ${row.correct_answer}</div>
+        </div>
+      </h4>
+  
+      <p class="ui justified">${row.question}</p>
+  
+      <div class="ui equal width form">
+      <h5 class="ui horizontal divider header">
+      <i class="toggle off icon"></i>
+      Selecciona tu respuesta
+      </h5>
+      <div class="inline fields">`;
+
+    answers.forEach(respuesta => {
+      html += `<div class="field">
+            <div class="ui toggle checkbox">
+            <input type="radio" name="answers${row.id}" value="${[respuesta,id,row.correct_answer]}" id="${row.id}">
+            <label>${respuesta}</label>
+            </div>
+            </div>`;
+    });
+
+    html += `
     </div>
-    <div class="description">
-    <p class="ui justified">${element.question}</p>
+    </div>
+
+    
+
+    <div class="ui dimmer" id="dimmergood${row.id}">
+    <div class="content">  
+    <h2 class="ui inverted icon header">
+    <i class="star yellow icon"></i>
+    <div class="content">Respuesta correcta!
+    <div class="sub header">${row.correct_answer}</div>
+    </div>
+    </h2>
     </div>
     </div>
     
-    <div class="extra content">
-    <div class="ui large transparent left icon input">
-    <i class="lightbulb outline ${colorDifficulty(element.difficulty)} icon"></i>
-    <input type="text" placeholder="Write answer">
-  </div>
+    
+    <div class="ui dimmer" id="dimmerbad${row.id}">
+    <div class="content">  
+    <h2 class="ui inverted icon header">
+    <i class="x red icon"></i>
+    <div class="content">Respuesta incorrecta!
+    <div class="sub header">${row.correct_answer}</div>
+    </div>
+    </h2>
     </div>
     </div>
-    </div>`
-  });
-  //poner los datos en el html
 
-  containerData.innerHTML = html;
+    </div>`;
+  });
+  html += `
+  <input type="submit" class="ui fluid button orange" onclick="getAnswers(${id})" id="resultadorespuestas">
+  <div class="ui basic segment"></div>`;
+
+  document.getElementById('form').innerHTML = html;
 }
 
-function getQuestions() {
-  const questionOptions = document.getElementById('questionOptions').value;
-  const categoryOptions = document.getElementById('categoryOptions').value;
-  const difficultyOptions = document.getElementById('difficultyOptions').value;
-  const tipeOptions = document.getElementById('tipeOptions').value;
+function getAnswers(ids) {
+  const elementos = numberToArray(ids);
+  elementos.forEach(data => {
+    const resp = document.getElementsByName('answers' + data); // Recoge la informacion de los input con el name="answers"
+    resp.forEach((row) => {
+      if (row.checked) {
+        $('.checkbox').checkbox('set disabled'); // Desahabilita los checkbox
+        $('#resultadorespuestas').addClass('disabled'); // Deshabilita el submit principa
+        $('#resultadorespuestas').val("Puedes generar nuevas preguntas desde el formulario de la izquierda, buena suerte!");
+        const valores = row.value.split(',');
+        if (valores[0] === valores[2]) {
+          $('#dimmergood' + data).dimmer('show');
+        } else {
+          $('#dimmerbad' + data).dimmer('show');
+        }
+      }
+    });
+  });
+}
 
-  const url = `https://opentdb.com/api.php?amount=${questionOptions}${categoryOptions}${difficultyOptions}${tipeOptions}`;
-  url.trim();
-  console.log(url);
+function numberToArray(cantidad) {
+  let a = [];
+  for (let i = 1; i < cantidad + 1; i++) {
+    a.push(i);
+  }
+  return a;
+}
+
+function getCat() {
+  const url = 'https://opentdb.com/api_category.php';
   fetch(url)
     .then((response) => response.json())
-    .then((data) => printData(data.results));
+    .then((data) => renderCat(data));
+}
+
+getCat();
+
+function renderCat(data) {
+  const catData = document.getElementById('categorias');
+  let html = `<option value="&category=">Seleccionar Categoria</option>`;
+  for (const cat of data.trivia_categories) {
+    html += `<option value="&category=${cat.id}">${cat.name}</option>`;
+  }
+  catData.innerHTML = html;
 }
 
 $('.ui.dropdown').dropdown(); // inicializa el select en semantic ui
@@ -71,94 +169,6 @@ function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-
-
-function categorias() {
-  const catData = document.getElementById('categoryOptions');
-  const cat = {
-    "categories": [{
-      "id": 9,
-      "name": "General Knowledge"
-    }, {
-      "id": 10,
-      "name": "Entertainment: Books"
-    }, {
-      "id": 11,
-      "name": "Entertainment: Film"
-    }, {
-      "id": 12,
-      "name": "Entertainment: Music"
-    }, {
-      "id": 13,
-      "name": "Entertainment: Musicals & Theatres"
-    }, {
-      "id": 14,
-      "name": "Entertainment: Television"
-    }, {
-      "id": 15,
-      "name": "Entertainment: Video Games"
-    }, {
-      "id": 16,
-      "name": "Entertainment: Board Games"
-    }, {
-      "id": 17,
-      "name": "Science & Nature"
-    }, {
-      "id": 18,
-      "name": "Science: Computers"
-    }, {
-      "id": 19,
-      "name": "Science: Mathematics"
-    }, {
-      "id": 20,
-      "name": "Mythology"
-    }, {
-      "id": 21,
-      "name": "Sports"
-    }, {
-      "id": 22,
-      "name": "Geography"
-    }, {
-      "id": 23,
-      "name": "History"
-    }, {
-      "id": 24,
-      "name": "Politics"
-    }, {
-      "id": 25,
-      "name": "Art"
-    }, {
-      "id": 26,
-      "name": "Celebrities"
-    }, {
-      "id": 27,
-      "name": "Animals"
-    }, {
-      "id": 28,
-      "name": "Vehicles"
-    }, {
-      "id": 29,
-      "name": "Entertainment: Comics"
-    }, {
-      "id": 30,
-      "name": "Science: Gadgets"
-    }, {
-      "id": 31,
-      "name": "Entertainment: Japanese Anime & Manga"
-    }, {
-      "id": 32,
-      "name": "Entertainment: Cartoon & Animations"
-    }]
-  };
-  let html = '';
-  html += `
-  <i class="dropdown icon"></i>
-  <option value=" ">Cualquier Categoria</option>`;
-
-  cat.categories.forEach(categorias => {
-    html += `<option value="&category=${categorias.id}">${categorias.name}</option>`;
-  });
-  catData.innerHTML = html;
+function deleteSpaces(string) {
+  string.split(" ").join("");
 }
-
-categorias();
