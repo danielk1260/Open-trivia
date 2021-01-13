@@ -25,15 +25,16 @@
             <div class="content">Open Trivia
                 <div class="sub header">Juego de preguntas y respuestas.</div>
             </div>
-            
-          </h1>
 
-        
+        </h1>
+
+
 
         <div class="ui centered grid">
             <div class="five wide column">
 
-                <form class="ui form tall stacked raised padded segment" id="formulario" onsubmit="event.preventDefault()">
+                <form class="ui form tall stacked raised padded segment" id="formulario"
+                    onsubmit="event.preventDefault()">
 
                     <div class="field">
                         <label>Cantidad de preguntas</label>
@@ -58,7 +59,7 @@
                         <select class="ui fluid selection dropdown" id="dificultad">
                             <i class="dropdown icon"></i>
                             <option value=""">Seleccionar Dificultad</option>
-                            <option value="easy">Easy</option>
+                            <option value=" easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
                         </select>
@@ -76,43 +77,50 @@
 
 
                     <div class="field">
-                        
+
 
                         <div class="ui animated fade instagram fluid button" tabindex="0" onclick="getQuest()">
                             <div class="visible content">Solicitar preguntas</div>
                             <div class="hidden content">
-                              Buena suerte!
+                                Buena suerte!
                             </div>
-                          </div>
+                        </div>
 
 
 
                     </div>
+
                 </form>
-                <div id="buttongetanswers"></div>
+                <!-- Estadisticas -->
+                <div class="ui indicating progress" id="progressbar">
+                    <div class="bar">
+                      <div class="progress"></div>
+                    </div>
+                    <div class="label">Preguntas contestadas</div>
+
+                  </div>
+                <!-- Estadisticas -->
             </div>
-
-
-
-            <!-- <h4 class="ui horizontal divider header">
-        <i class="cog grey loading icon"></i> Daniel Camacho
-    </h4> -->
 
             <div class="eleven wide column">
                 <div class="ui centered container">
                     <form id="form" onsubmit="event.preventDefault()">
-                        
+
                         <div class="ui tall stacked raised padded segment">
 
                             <h2 class="ui blue header">
                                 Introduccion
                                 <div class="sub header">Contexto sobre el desarrollo del proyecto.</div>
-                              </h2>
-                             <p>Bienvenidos a este proyecto que consiste en un juego de preguntas y respuestas las cuales provienen de un servidor externo mediante el consumo de un api.</p>
-                             <p>El sitio proveniente de la informacion es el siguiente <a href="http://opentdb.com/">Opentdb.</a></p>
-                             <p>Esta escrito en javascript para el procesamiento de informacion y validacion de las respuestas.</p>
-                             <p>Algunos recursos para la estructura de la maquetacion, estilos y animaciones son las siguientes representadas con su respectivo icono.</p>
-                             
+                            </h2>
+                            <p>Bienvenidos a este proyecto que consiste en un juego de preguntas y respuestas las cuales
+                                provienen de un servidor externo mediante el consumo de un api.</p>
+                            <p>El sitio proveniente de la informacion es el siguiente <a
+                                    href="http://opentdb.com/">Opentdb.</a></p>
+                            <p>Esta escrito en javascript para el procesamiento de informacion y validacion de las
+                                respuestas.</p>
+                            <p>Algunos recursos para la estructura de la maquetacion, estilos y animaciones son las
+                                siguientes representadas con su respectivo icono.</p>
+
                             <div class="ui equal width center aligned grid">
                                 <div class="column"><i class="massive js square yellow icon"></i></div>
                                 <div class="column"><i class="massive html5 orange icon"></i></div>

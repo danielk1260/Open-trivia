@@ -7,9 +7,21 @@ function getQuest() {
 
   let url = `https://opentdb.com/api.php?amount=${cantidad}${categorias}&difficulty=${dificultad}&type=${tipo}`;
 
+  $('#progressbar').progress('reset').progress({
+    total: cantidad
+  });
+
+  
+  
+
   fetch(url)
     .then((response) => response.json())
     .then((data) => renderQuest(data.results));
+}
+
+function progressBar(data) {
+  $('#progressbar').progress('increment');
+  $('#checkbox' + data).checkbox('set disabled'); // Desahabilita los checkbox
 }
 
 function renderQuest(data) {
@@ -18,7 +30,7 @@ function renderQuest(data) {
   let id = 0;
 
   data.forEach((row, index) => {
-  
+
     id += 1;
     row.id = id;
 
@@ -50,12 +62,12 @@ function renderQuest(data) {
       <i class="toggle off icon"></i>
       Selecciona tu respuesta
       </h5>
-      <div class="inline fields">`;
+      <div class="inline fields" id="checkbox${row.id}">`;
 
     answers.forEach(respuesta => {
       html += `<div class="field">
             <div class="ui toggle checkbox">
-            <input type="radio" name="answers${row.id}" value="${[respuesta,id,row.correct_answer]}" id="${row.id}">
+            <input type="radio" name="answers${row.id}" value="${[respuesta,id,row.correct_answer]}" onclick="progressBar(${row.id})">
             <label>${respuesta}</label>
             </div>
             </div>`;
