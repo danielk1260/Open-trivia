@@ -54,8 +54,10 @@ function renderQuest(data) {
           <div class="sub header">${capitalize(row.difficulty)} | ${capitalize(row.type)} | ${row.correct_answer}</div>
         </div>
       </h4>
-  
-      <p class="ui justified">${row.question}</p>
+      
+      <div class="ui inverted ${colorDifficulty(row.difficulty)} tertiary segment very padded center aligned">
+      <h4><i class="ui quote left icon"></i> ${row.question} <i class="ui quote right icon"></i></h4>
+      </div>
   
       <div class="ui equal width form">
       <h5 class="ui horizontal divider header">
