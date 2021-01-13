@@ -60,10 +60,9 @@ function renderQuest(data) {
       </div>
   
       <div class="ui equal width form">
-      <h5 class="ui horizontal divider header">
-      <i class="toggle off icon"></i>
-      Selecciona tu respuesta
-      </h5>
+
+      <div class="ui divider"></div>
+
       <div class="inline fields" id="checkbox${row.id}">`;
 
     answers.forEach(respuesta => {
